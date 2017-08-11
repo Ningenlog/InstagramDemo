@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LeanCloud
 
 class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     var scrollViewHeight: CGFloat = 0
@@ -84,6 +85,42 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     }
     
     @IBAction func signUpBtn_clicked(_ sender: Any) {
+        self.view.endEditing(true)
+        //判断注册内容是否都填上了
+        if usernameTxt.text!.isEmpty || passwordTxt.text!.isEmpty || repeatPasswordTxt.text!.isEmpty || emailTxt.text!.isEmpty || fullnameTxt.text!.isEmpty || bioTxt.text!.isEmpty || webTxt.text!.isEmpty{
+            //alert
+            let alert = UIAlertController(title: "错误", message: "还有信息未填", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "ok", style: .cancel, handler: nil)
+            alert.addAction(ok)
+            self.present(alert, animated: true, completion: nil)
+            
+            return
+        }
+        //
+        if passwordTxt.text != repeatPasswordTxt.text {
+            let alert = UIAlertController(title: "错误", message: "两次输入的密码不一致", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(ok)
+            self.present(alert, animated: true, completion: nil)
+            
+            return
+        }
+        
+        let user = LCUser()
+        user.username = LCString.init(usernameTxt.text!.lowercased())
+        user.email = LCString.init(emailTxt.text!.lowercased())
+        user.password = LCString.init(passwordTxt.text!)
+        
+        user["fullname"] = LCString.init(fullnameTxt.text!.lowercased())
+        user["bio"] = LCString.init(bioTxt.text!)
+        user["web"] = LCString.init(webTxt.text!.lowercased())
+        user["gender"] = LCString.init(" ")
+        
+        //头像
+        let avaData = UIImageJPEGRepresentation(avaImg.image!, 0.5)
+        
+        
+        
     }
     
     @IBAction func cancelBtn_clicked(_ sender: Any) {
