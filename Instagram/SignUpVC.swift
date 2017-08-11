@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SignUpVC: UIViewController {
+class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     var scrollViewHeight: CGFloat = 0
     var keyboard: CGRect = CGRect()
     
@@ -40,6 +40,29 @@ class SignUpVC: UIViewController {
         hideTap.numberOfTapsRequired = 1
         self.view.isUserInteractionEnabled = true
         self.view.addGestureRecognizer(hideTap)
+        
+        //
+        let imgTap = UITapGestureRecognizer(target: self, action: #selector(loadImg(recognizer:)))
+        imgTap.numberOfTapsRequired = 1
+        avaImg.isUserInteractionEnabled = true
+        avaImg.addGestureRecognizer(imgTap)
+        
+        //设置头像为圆形
+        avaImg.layer.cornerRadius = avaImg.frame.width/2
+        avaImg.clipsToBounds = true
+
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        avaImg.image = info[UIImagePickerControllerEditedImage] as? UIImage
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func loadImg(recognizer: UITapGestureRecognizer) -> Void {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .photoLibrary
+        picker.allowsEditing = true
+        present(picker, animated: true, completion: nil)
     }
     
     func hideKeyboardTap(recognizer: UITapGestureRecognizer) -> Void {
